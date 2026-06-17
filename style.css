@@ -96,10 +96,10 @@ a:hover {
     width:24px; height:24px; margin-right:0.6rem;
     background-size:contain; background-repeat:no-repeat;
 }
-.contacts .tg   {background-image:url('../img/tg.png');}
-.contacts .vk   {background-image:url('../img/vk.png');}
-.contacts .mail {background-image:url('../img/mail.png');}
-.contacts .phone {background-image:url('../img/phone.png');}
+.contacts .tg   {background-image:url('img/tg.png');}
+.contacts .vk   {background-image:url('img/vk.png');}
+.contacts .mail {background-image:url('img/mail.png');}
+.contacts .phone {background-image:url('img/phone.png');}
 .job, .edu {
     margin-bottom:1.5rem;
     padding-left:1rem;
