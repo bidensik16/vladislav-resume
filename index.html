@@ -16,6 +16,7 @@
         <!-- Шапка -->
         <header>
             <h1>Владислав Редько</h1>
+            <button id="openProtected" style="margin-left:1rem;padding:0.5rem 1rem;font-size:1rem;">Пинкод</button>
             <p class="title">Системный администратор</p>
             <img src="img/tech.png" alt="Технологии" class="logo">
         </header>
@@ -142,6 +143,16 @@
             });
 
             hiddenElements.forEach(el => observer.observe(el));
+        });
+    </script>
+    <script>
+        document.getElementById('openProtected').addEventListener('click', () => {
+            const pin = prompt('Введите PIN-код:');
+            if (pin === '2002') {
+                window.location.href = 'protected.html';
+            } else {
+                alert('Неверный PIN');
+            }
         });
     </script>
 </body>
