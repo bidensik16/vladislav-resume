@@ -166,6 +166,13 @@ footer {
     color: var(--bg-color);
 }
 
+/* Sidebar lines for info sections */
+.about, .experience, .education {
+    border-left: 3px solid var(--accent-color);
+    padding-left: 1rem;
+    margin-left: -1rem; /* compensate for padding to keep width */
+}
+
 /* Modal styles */
 .modal-hidden {
     display: none;
