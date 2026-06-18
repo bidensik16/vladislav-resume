@@ -2,22 +2,44 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ПРИКОЛЬЧИК</title>
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #000;
-            color: #0f0;
-            font-size: 5rem;
-            font-family: monospace;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    ПРИКОЛЬЧИК
+    <!-- Фон + анимированная сетка -->
+    <div class="bg-layer">
+        <div class="grid"></div>
+    </div>
+
+    <div class="container">
+        <!-- Контент -->
+        <div class="content" style="text-align:center; margin-top: 10vh;">
+            <h1 style="color:var(--accent-color); text-shadow:var(--accent-glow); font-size: 3rem;">ПРИКОЛЬЧИК</h1>
+            <a href="index.html" class="header-btn" style="display:inline-block; margin-top:2rem;">Вернуться на главную</a>
+        </div>
+    </div>
+
+    <!-- Неоновый пульсирующий контур вокруг страницы -->
+    <div class="neon-border"></div>
+
+    <script>
+        // Simple IntersectionObserver to reveal elements on scroll (if needed)
+        document.addEventListener('DOMContentLoaded', function () {
+            const hiddenElements = document.querySelectorAll('.hidden');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.remove('hidden');
+                        entry.target.classList.add('show');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            hiddenElements.forEach(el => observer.observe(el));
+        });
+    </script>
 </body>
 </html>
