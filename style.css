@@ -56,7 +56,6 @@ body {
     border-radius:8px;
     box-shadow:0 0 20px var(--accent-color);
     position:relative;
-    z-index:-1;
 }
 h1, h2, h3 {
     color:var(--accent-color);
