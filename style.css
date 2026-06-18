@@ -101,8 +101,6 @@ a:hover {
 .contacts .phone {background-image:url('img/phone.png');}
 .job, .edu {
     margin-bottom:1.5rem;
-    padding-left:1rem;
-    border-left:3px solid var(--accent-color);
 }
 .job h3, .edu h3 {display:inline-block; margin-right:0.5rem;}
 .company, .instruction {font-weight:bold; color:#ffb3b3;}
@@ -167,7 +165,7 @@ footer {
 }
 
 /* Sidebar lines for info sections */
-.about, .experience, .education {
+.contacts, .skills {
     border-left: 3px solid var(--accent-color);
     padding-left: 1rem;
     margin-left: -1rem; /* compensate for padding to keep width */
