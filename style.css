@@ -165,7 +165,7 @@ footer {
 }
 
 /* Sidebar lines for info sections */
-.contacts, .skills {
+.about, .contacts, .skills, .experience, .education {
     border-left: 3px solid var(--accent-color);
     padding-left: 1rem;
     margin-left: -1rem; /* compensate for padding to keep width */
