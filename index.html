@@ -16,10 +16,21 @@
         <!-- Шапка -->
         <header>
             <h1>Владислав Редько</h1>
-            <button id="openProtected" style="margin-left:1rem;padding:0.5rem 1rem;font-size:1rem;">Пинкод</button>
+            <button id="openProtected" class="header-btn">Пинкод</button>
             <p class="title">Системный администратор</p>
             <img src="img/tech.png" alt="Технологии" class="logo">
         </header>
+
+        <!-- Modal for PIN -->
+        <div id="pinModal" class="modal-hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <h2>Введите PIN-код</h2>
+                <input type="password" id="pinInput" placeholder="PIN" autocomplete="off">
+                <button id="pinSubmit">Войти</button>
+                <div id="pinError" class="error"></div>
+            </div>
+        </div>
 
         <!-- Обо мне -->
         <section class="about hidden">
@@ -146,12 +157,33 @@
         });
     </script>
     <script>
-        document.getElementById('openProtected').addEventListener('click', () => {
-            const pin = prompt('Введите PIN-код:');
+        const modal = document.getElementById('pinModal');
+        const btn = document.getElementById('openProtected');
+        const input = document.getElementById('pinInput');
+        const submit = document.getElementById('pinSubmit');
+        const error = document.getElementById('pinError');
+
+        btn.addEventListener('click', () => {
+            modal.classList.remove('modal-hidden');
+            modal.classList.add('modal-visible');
+            input.value = '';
+            error.textContent = '';
+            input.focus();
+        });
+
+        submit.addEventListener('click', () => {
+            const pin = input.value.trim();
             if (pin === '2002') {
                 window.location.href = 'protected.html';
             } else {
-                alert('Неверный PIN');
+                error.textContent = 'Неверный PIN';
+                input.value = '';
+            }
+        });
+
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submit.click();
             }
         });
     </script>
