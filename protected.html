@@ -52,19 +52,38 @@
     </div>
 
     <script>
-        // Замените на свой пароль (можно хранить хеш, но для простоты оставляем открытый)
-        const CORRECT_PASSWORD = "2002";
-        document.getElementById('pwBtn').onclick = () => {
+        // SHA-256 hash of the expected PIN (2002)
+        const CORRECT_PASSWORD_HASH = "6c94e35ccc352d4e9ef0b99562cff995a5741ce8de8ad11b568892934daee366";
+
+        async function hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        document.getElementById('pwBtn').onclick = async () => {
             const input = document.getElementById('pwInput').value.trim();
-            if (input === CORRECT_PASSWORD) {
+            const inputHash = await hashPassword(input);
+            if (inputHash === CORRECT_PASSWORD_HASH) {
                 document.getElementById('auth').style.display = 'none';
                 document.getElementById('content').style.display = 'block';
             } else {
                 document.getElementById('pwError').textContent = 'Неверный PIN';
             }
         };
-        document.getElementById('pwInput').onkeypress = e => {
-            if (e.key === 'Enter') document.getElementById('pwBtn').click();
+        document.getElementById('pwInput').onkeypress = async e => {
+            if (e.key === 'Enter') {
+                const input = document.getElementById('pwInput').value.trim();
+                const inputHash = await hashPassword(input);
+                if (inputHash === CORRECT_PASSWORD_HASH) {
+                    document.getElementById('auth').style.display = 'none';
+                    document.getElementById('content').style.display = 'block';
+                } else {
+                    document.getElementById('pwError').textContent = 'Неверный PIN';
+                }
+            }
         };
         // Simple IntersectionObserver to reveal elements on scroll (if needed)
         document.addEventListener('DOMContentLoaded', function () {
