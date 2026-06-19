@@ -13,8 +13,8 @@
     </div>
 
     <div id="auth" style="text-align:center; margin-top:20vh; color:#fff;">
-        <h2>Введите секрет</h2>
-        <input type="password" id="pwInput" placeholder="Секрет" autocomplete="off" style="padding:0.5rem; font-size:1rem;">
+        <h2>Введите PIN</h2>
+        <input type="password" id="pwInput" placeholder="PIN" autocomplete="off" style="padding:0.5rem; font-size:1rem;">
         <button id="pwBtn" style="padding:0.5rem 1rem; font-size:1rem; margin-left:0.5rem;">Войти</button>
         <p id="pwError" style="color:#ff6b6b; margin-top:0.5rem;"></p>
     </div>
@@ -60,7 +60,7 @@
                 document.getElementById('auth').style.display = 'none';
                 document.getElementById('content').style.display = 'block';
             } else {
-                document.getElementById('pwError').textContent = 'Неверный секрет';
+                document.getElementById('pwError').textContent = 'Неверный PIN';
             }
         };
         document.getElementById('pwInput').onkeypress = e => {

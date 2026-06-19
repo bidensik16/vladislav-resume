@@ -16,20 +16,9 @@
         <!-- Шапка -->
         <header>
             <h1>Владислав Редько</h1>
-            <button id="openProtected" class="header-btn">Секретик</button>
+            <button id="openProtected" class="header-btn" onclick="window.location.href='protected.html'">Секретик</button>
             <p class="title">Системный администратор</p>
         </header>
-
-        <!-- Modal for PIN -->
-        <div id="pinModal" class="modal-hidden">
-            <div class="modal-backdrop"></div>
-            <div class="modal-content">
-                <h2>Введите секрет</h2>
-                <input type="password" id="pinInput" placeholder="Секрет" autocomplete="off">
-                <button id="pinSubmit">Войти</button>
-                <div id="pinError" class="error"></div>
-            </div>
-        </div>
 
         <!-- Обо мне -->
         <section class="about hidden">
@@ -146,37 +135,6 @@
             });
 
             hiddenElements.forEach(el => observer.observe(el));
-        });
-    </script>
-    <script>
-        const modal = document.getElementById('pinModal');
-        const btn = document.getElementById('openProtected');
-        const input = document.getElementById('pinInput');
-        const submit = document.getElementById('pinSubmit');
-        const error = document.getElementById('pinError');
-
-        btn.addEventListener('click', () => {
-            modal.classList.remove('modal-hidden');
-            modal.classList.add('modal-visible');
-            input.value = '';
-            error.textContent = '';
-            input.focus();
-        });
-
-        submit.addEventListener('click', () => {
-            const pin = input.value.trim();
-            if (pin === '2002') {
-                window.location.href = 'protected.html';
-            } else {
-                error.textContent = 'Неверный PIN';
-                input.value = '';
-            }
-        });
-
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                submit.click();
-            }
         });
     </script>
 </body>
