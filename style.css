@@ -135,6 +135,16 @@ footer {
     box-shadow:0 0 12px var(--accent-color), 0 0 24px var(--accent-color);
     animation:pulseBorder 2s ease-in-out infinite;
 }
+.neon-wrap {
+    position: relative;
+    display: inline-block;
+    border: 2px solid var(--accent-color);
+    box-shadow: 0 0 12px var(--accent-color), 0 0 24px var(--accent-color);
+    animation: pulseBorder 2s ease-in-out infinite;
+    padding: 1.5rem;
+    border-radius: 8px;
+    background: rgba(0,0,0,0.4);
+}
 @keyframes pulseBorder {
     0%,100% {opacity:0.6;}
     50% {opacity:1;}
