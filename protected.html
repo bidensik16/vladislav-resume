@@ -4,40 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎮 ПРИКОЛЬЧИК</title>
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
-    <!-- Фон + анимированная сетка -->
+
+    <!-- SPLASH / PRELOADER -->
+    <div id="splash">
+        <div class="splash-text">СЕКРЕТНЫЙ ДОСТУП</div>
+        <div class="splash-loader"></div>
+    </div>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="custom-cursor" id="cursor">
+        <div class="cursor-dot"></div>
+    </div>
+
+    <!-- Фон -->
     <div class="bg-layer">
         <div class="grid"></div>
+        <canvas id="particles"></canvas>
     </div>
 
-    <div id="auth" style="text-align:center; margin-top:20vh; color:#fff;">
-        <h2>Введите PIN</h2>
-        <input type="password" id="pwInput" placeholder="PIN" autocomplete="off" class="pin-input">
-        <button id="pwBtn" class="header-btn">Войти</button>
-        <p id="pwError" style="color:#ff6b6b; margin-top:0.5rem;"></p>
+    <!-- Плавающие геометрические фигуры -->
+    <div class="floating-shapes">
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
     </div>
 
+    <!-- Матричный дождь -->
+    <canvas id="matrix-rain" class="matrix-rain"></canvas>
+
+    <!-- Внешний слой неона -->
+    <div class="neon-border-out"></div>
+
+    <!-- Форма авторизации -->
+    <div id="auth" style="text-align:center; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="background:rgba(10,10,10,0.6); backdrop-filter:blur(12px); border:1px solid rgba(255,7,58,0.25); border-radius:16px; padding:2.5rem; box-shadow:0 0 30px rgba(255,7,58,0.15); max-width:360px; width:90%;">
+            <h1 style="font-family:'Orbitron',sans-serif; font-size:1.8rem; text-transform:uppercase; letter-spacing:4px; margin-bottom:1.5rem;">Доступ</h1>
+            <input type="password" id="pwInput" placeholder="PIN" autocomplete="off" class="pin-input">
+            <button id="pwBtn" class="header-btn" style="display:block; margin:0 auto;">Войти</button>
+            <p id="pwError" class="error" style="margin-top:1rem;"></p>
+        </div>
+    </div>
+
+    <!-- Контент (скрыт до авторизации) -->
     <div id="content" style="display:none;">
         <div class="container">
-            <!-- Контент -->
-            <div class="content" style="text-align:center; margin-top: 10vh;">
+            <div class="content" style="text-align:center; margin-top: 2rem;">
+                <h1 class="glitch" data-text="Конфигурация ПК" style="font-size:2rem; margin-bottom:2rem;">Конфигурация ПК</h1>
                 <div class="hardware-blocks" style="display:flex; justify-content:center; gap:2rem; margin-top:2rem; flex-wrap:wrap;">
-                    <!-- Block 1 -->
-                    <div class="block neon-wrap" style="background:rgba(0,0,0,0.4); padding:1.5rem; border-radius:8px; min-width:200px;">
-                        <h2 style="color:var(--accent-color); margin-bottom:1rem;">PC</h2>
-                        <ul style="text-align:left; color:#fff; line-height:1.6;">
+                    <div class="block neon-wrap" style="min-width:220px;">
+                        <h2 style="color:var(--accent-color); margin-bottom:1rem; font-family:'Orbitron',sans-serif;">PC</h2>
+                        <ul style="text-align:left; color:#fff; line-height:1.8;">
                             <li>Motherboard ASRock B650M Pro RS</li>
                             <li>CPU AMD Ryzen 7 7700</li>
                             <li>GPU RX 6700 XT</li>
                             <li>G.Skill Ripjaws S5 DDR5 32GB</li>
                         </ul>
                     </div>
-                    <!-- Block 2 -->
-                    <div class="block neon-wrap" style="background:rgba(0,0,0,0.4); padding:1.5rem; border-radius:8px; min-width:200px;">
-                        <h2 style="color:var(--accent-color); margin-bottom:1rem;">Периферия</h2>
-                        <ul style="text-align:left; color:#fff; line-height:1.6;">
+                    <div class="block neon-wrap" style="min-width:220px;">
+                        <h2 style="color:var(--accent-color); margin-bottom:1rem; font-family:'Orbitron',sans-serif;">Периферия</h2>
+                        <ul style="text-align:left; color:#fff; line-height:1.8;">
                             <li>Монитор Redmi G27Q 2025 2K IPS 180 Гц</li>
                             <li>Монитор AOC 24" 144 Гц</li>
                             <li>Мышь ZAOPIN Z2</li>
@@ -51,10 +84,135 @@
         </div>
     </div>
 
-    <script>
-        // SHA-256 hash of the expected PIN (2002)
-        const CORRECT_PASSWORD_HASH = "6c94e35ccc352d4e9ef0b99562cff995a5741ce8de8ad11b568892934daee366";
+    <!-- Неоновая рамка -->
+    <div class="neon-border"></div>
 
+    <script>
+        // ============ CUSTOM CURSOR ============
+        (function() {
+            const cursor = document.getElementById('cursor');
+            if (!cursor) return;
+            let mouseX = 0, mouseY = 0;
+            let curX = 0, curY = 0;
+            document.addEventListener('mousemove', e => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            const hoverTargets = 'a, button, input, .header-btn, .glitch, h1, h2, h3, li';
+            document.addEventListener('mouseover', e => {
+                if (e.target.closest(hoverTargets)) cursor.classList.add('hover');
+            });
+            document.addEventListener('mouseout', e => {
+                if (e.target.closest(hoverTargets)) cursor.classList.remove('hover');
+            });
+            function moveCursor() {
+                curX += (mouseX - curX) * 0.12;
+                curY += (mouseY - curY) * 0.12;
+                cursor.style.left = curX + 'px';
+                cursor.style.top = curY + 'px';
+                requestAnimationFrame(moveCursor);
+            }
+            moveCursor();
+            document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
+            document.addEventListener('mouseenter', () => { cursor.style.opacity = '1'; });
+        })();
+
+        // ============ MATRIX RAIN ============
+        (function() {
+            const canvas = document.getElementById('matrix-rain');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let fontSize = 14;
+            let columns, drops;
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                columns = Math.floor(canvas.width / fontSize);
+                drops = Array(columns).fill(1).map(() => Math.random() * -canvas.height / fontSize);
+            }
+            window.addEventListener('resize', resize);
+            resize();
+            const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲ0123456789';
+            function drawMatrix() {
+                ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.font = fontSize + 'px monospace';
+                for (let i = 0; i < drops.length; i++) {
+                    const text = chars[Math.floor(Math.random() * chars.length)];
+                    const x = i * fontSize;
+                    const y = drops[i] * fontSize;
+                    const brightness = Math.random() > 0.95 ? 1 : 0.4;
+                    ctx.fillStyle = `rgba(255, 7, 58, ${brightness * 0.7})`;
+                    ctx.fillText(text, x, y);
+                    if (y > canvas.height && Math.random() > 0.975) { drops[i] = 0; }
+                    drops[i]++;
+                }
+                requestAnimationFrame(drawMatrix);
+            }
+            drawMatrix();
+        })();
+
+        // ============ PARTICLES ============
+        (function() {
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+            class Particle {
+                constructor() { this.reset(); }
+                reset() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 2.5 + 0.5;
+                    this.speedX = (Math.random() - 0.5) * 0.4;
+                    this.speedY = (Math.random() - 0.5) * 0.4;
+                    this.opacity = Math.random() * 0.5 + 0.1;
+                    this.hue = Math.random() > 0.5 ? 0 : 200;
+                }
+                update() {
+                    this.x += this.speedX; this.y += this.speedY;
+                    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    const color = this.hue === 0 ? '255, 7, 58' : '0, 212, 255';
+                    ctx.fillStyle = `rgba(${color}, ${this.opacity})`;
+                    ctx.fill();
+                }
+            }
+            const count = Math.min(80, Math.floor((canvas.width * canvas.height) / 10000));
+            for (let i = 0; i < count; i++) particles.push(new Particle());
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => { p.update(); p.draw(); });
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 130) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(255, 7, 58, ${0.1 * (1 - dist / 130)})`;
+                            ctx.lineWidth = 0.6;
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
+
+        // ============ PIN AUTH ============
+        const CORRECT_PASSWORD_HASH = "6c94e35ccc352d4e9ef0b99562cff995a5741ce8de8ad11b568892934daee366";
         async function hashPassword(password) {
             const encoder = new TextEncoder();
             const data = encoder.encode(password);
@@ -62,44 +220,31 @@
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
-
-        document.getElementById('pwBtn').onclick = async () => {
+        async function checkPin() {
             const input = document.getElementById('pwInput').value.trim();
             const inputHash = await hashPassword(input);
             if (inputHash === CORRECT_PASSWORD_HASH) {
                 document.getElementById('auth').style.display = 'none';
                 document.getElementById('content').style.display = 'block';
+                document.getElementById('pwError').textContent = '';
             } else {
                 document.getElementById('pwError').textContent = 'Неверный PIN';
             }
-        };
+        }
+        document.getElementById('pwBtn').onclick = checkPin;
         document.getElementById('pwInput').onkeypress = async e => {
-            if (e.key === 'Enter') {
-                const input = document.getElementById('pwInput').value.trim();
-                const inputHash = await hashPassword(input);
-                if (inputHash === CORRECT_PASSWORD_HASH) {
-                    document.getElementById('auth').style.display = 'none';
-                    document.getElementById('content').style.display = 'block';
-                } else {
-                    document.getElementById('pwError').textContent = 'Неверный PIN';
-                }
-            }
+            if (e.key === 'Enter') await checkPin();
         };
-        // Simple IntersectionObserver to reveal elements on scroll (if needed)
-        document.addEventListener('DOMContentLoaded', function () {
-            const hiddenElements = document.querySelectorAll('.hidden');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.remove('hidden');
-                        entry.target.classList.add('show');
-                    }
-                });
-            }, {
-                threshold: 0.1
-            });
 
-            hiddenElements.forEach(el => observer.observe(el));
+        // ============ SPLASH SCREEN ============
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const splash = document.getElementById('splash');
+                splash.classList.add('fade-out');
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                }, 800);
+            }, 1200);
         });
     </script>
 </body>

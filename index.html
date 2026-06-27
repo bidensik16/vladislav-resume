@@ -7,17 +7,44 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
+
+    <!-- SPLASH / PRELOADER -->
+    <div id="splash">
+        <div class="splash-text">ЗАГРУЗКА</div>
+        <div class="splash-loader"></div>
+    </div>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="custom-cursor" id="cursor">
+        <div class="cursor-dot"></div>
+    </div>
+
     <!-- Фон + анимированная сетка -->
     <div class="bg-layer">
         <div class="grid"></div>
         <canvas id="particles"></canvas>
     </div>
 
+    <!-- Плавающие геометрические фигуры -->
+    <div class="floating-shapes">
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+    </div>
+
+    <!-- Матричный дождь -->
+    <canvas id="matrix-rain" class="matrix-rain"></canvas>
+
     <!-- Прогресс-бар чтения -->
     <div id="progress-bar"></div>
+
+    <!-- Внешний слой неона -->
+    <div class="neon-border-out"></div>
 
     <div class="container">
         <!-- Шапка -->
@@ -127,7 +154,88 @@
     <div class="neon-border"></div>
 
     <script>
-        // Particles animation
+        // ============ CUSTOM CURSOR ============
+        (function() {
+            const cursor = document.getElementById('cursor');
+            if (!cursor) return;
+            let mouseX = 0, mouseY = 0;
+            let curX = 0, curY = 0;
+            document.addEventListener('mousemove', e => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            // Hover effect on interactive elements
+            const hoverTargets = 'a, button, input, .header-btn, .glitch, h1, h2, h3, li';
+            document.addEventListener('mouseover', e => {
+                if (e.target.closest(hoverTargets)) {
+                    cursor.classList.add('hover');
+                }
+            });
+            document.addEventListener('mouseout', e => {
+                if (e.target.closest(hoverTargets)) {
+                    cursor.classList.remove('hover');
+                }
+            });
+            function moveCursor() {
+                curX += (mouseX - curX) * 0.12;
+                curY += (mouseY - curY) * 0.12;
+                cursor.style.left = curX + 'px';
+                cursor.style.top = curY + 'px';
+                requestAnimationFrame(moveCursor);
+            }
+            moveCursor();
+            // Hide cursor when leaving window
+            document.addEventListener('mouseleave', () => {
+                cursor.style.opacity = '0';
+            });
+            document.addEventListener('mouseenter', () => {
+                cursor.style.opacity = '1';
+            });
+        })();
+
+        // ============ MATRIX RAIN ============
+        (function() {
+            const canvas = document.getElementById('matrix-rain');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let fontSize = 14;
+            let columns, drops;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                columns = Math.floor(canvas.width / fontSize);
+                drops = Array(columns).fill(1).map(() => Math.random() * -canvas.height / fontSize);
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポ0123456789';
+
+            function drawMatrix() {
+                ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#ff073a';
+                ctx.font = fontSize + 'px monospace';
+                for (let i = 0; i < drops.length; i++) {
+                    const text = chars[Math.floor(Math.random() * chars.length)];
+                    const x = i * fontSize;
+                    const y = drops[i] * fontSize;
+                    // Fade effect: first char brighter
+                    const brightness = Math.random() > 0.95 ? 1 : 0.4;
+                    ctx.fillStyle = `rgba(255, 7, 58, ${brightness * 0.7})`;
+                    ctx.fillText(text, x, y);
+                    if (y > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+                requestAnimationFrame(drawMatrix);
+            }
+            drawMatrix();
+        })();
+
+        // ============ PARTICLES (enhanced) ============
         (function() {
             const canvas = document.getElementById('particles');
             const ctx = canvas.getContext('2d');
@@ -145,10 +253,11 @@
                 reset() {
                     this.x = Math.random() * canvas.width;
                     this.y = Math.random() * canvas.height;
-                    this.size = Math.random() * 2 + 0.5;
-                    this.speedX = (Math.random() - 0.5) * 0.3;
-                    this.speedY = (Math.random() - 0.5) * 0.3;
+                    this.size = Math.random() * 2.5 + 0.5;
+                    this.speedX = (Math.random() - 0.5) * 0.4;
+                    this.speedY = (Math.random() - 0.5) * 0.4;
                     this.opacity = Math.random() * 0.5 + 0.1;
+                    this.hue = Math.random() > 0.5 ? 0 : 200; // red or blue hue
                 }
                 update() {
                     this.x += this.speedX;
@@ -160,12 +269,13 @@
                 draw() {
                     ctx.beginPath();
                     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 7, 58, ${this.opacity})`;
+                    const color = this.hue === 0 ? '255, 7, 58' : '0, 212, 255';
+                    ctx.fillStyle = `rgba(${color}, ${this.opacity})`;
                     ctx.fill();
                 }
             }
 
-            const count = Math.min(80, Math.floor((canvas.width * canvas.height) / 12000));
+            const count = Math.min(100, Math.floor((canvas.width * canvas.height) / 10000));
             for (let i = 0; i < count; i++) particles.push(new Particle());
 
             function animate() {
@@ -177,12 +287,14 @@
                         const dx = particles[i].x - particles[j].x;
                         const dy = particles[i].y - particles[j].y;
                         const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 120) {
+                        if (dist < 130) {
                             ctx.beginPath();
                             ctx.moveTo(particles[i].x, particles[i].y);
                             ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = `rgba(255, 7, 58, ${0.08 * (1 - dist / 120)})`;
-                            ctx.lineWidth = 0.5;
+                            const alpha = 0.1 * (1 - dist / 130);
+                            // gradient line between red and blue particles
+                            ctx.strokeStyle = `rgba(255, 7, 58, ${alpha})`;
+                            ctx.lineWidth = 0.6;
                             ctx.stroke();
                         }
                     }
@@ -192,7 +304,7 @@
             animate();
         })();
 
-        // Progress bar
+        // ============ PROGRESS BAR ============
         window.addEventListener('scroll', function() {
             const scrollTop = window.scrollY;
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -200,7 +312,18 @@
             document.getElementById('progress-bar').style.width = progress + '%';
         });
 
-        // IntersectionObserver for reveal
+        // ============ SPLASH SCREEN ============
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const splash = document.getElementById('splash');
+                splash.classList.add('fade-out');
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                }, 800);
+            }, 1200);
+        });
+
+        // ============ INTERSECTION OBSERVER ============
         document.addEventListener('DOMContentLoaded', function () {
             const hiddenElements = document.querySelectorAll('.hidden');
             const observer = new IntersectionObserver((entries) => {
