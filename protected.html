@@ -57,9 +57,9 @@
     <div id="content" style="display:none;">
         <div class="container">
             <div class="content" style="text-align:center; margin-top: 2rem;">
-                <h1 class="glitch" data-text="Конфигурация ПК" style="font-size:2rem; margin-bottom:2rem;">Конфигурация ПК</h1>
-                <div class="hardware-blocks" style="display:flex; justify-content:center; gap:2rem; margin-top:2rem; flex-wrap:wrap;">
-                    <div class="block neon-wrap" style="min-width:220px;">
+                <h1 class="glitch hidden" data-text="Конфигурация ПК" style="font-size:2rem; margin-bottom:2rem;">Конфигурация ПК</h1>
+                <div class="hardware-blocks hidden" style="display:flex; justify-content:center; gap:2rem; margin-top:2rem; flex-wrap:wrap;">
+                    <div class="block neon-wrap hidden" style="min-width:220px;">
                         <h2 style="color:var(--accent-color); margin-bottom:1rem; font-family:'Orbitron',sans-serif;">PC</h2>
                         <ul style="text-align:left; color:#fff; line-height:1.8;">
                             <li>Motherboard ASRock B650M Pro RS</li>
@@ -68,7 +68,7 @@
                             <li>G.Skill Ripjaws S5 DDR5 32GB</li>
                         </ul>
                     </div>
-                    <div class="block neon-wrap" style="min-width:220px;">
+                    <div class="block neon-wrap hidden" style="min-width:220px;">
                         <h2 style="color:var(--accent-color); margin-bottom:1rem; font-family:'Orbitron',sans-serif;">Периферия</h2>
                         <ul style="text-align:left; color:#fff; line-height:1.8;">
                             <li>Монитор Redmi G27Q 2025 2K IPS 180 Гц</li>
@@ -79,7 +79,7 @@
                         </ul>
                     </div>
                 </div>
-                <a href="index.html" class="header-btn" style="display:inline-block; margin-top:2rem;">← Вернуться на главную</a>
+                <a href="index.html" class="header-btn hidden" style="display:inline-block; margin-top:2rem;">← Вернуться на главную</a>
             </div>
         </div>
     </div>
@@ -87,6 +87,21 @@
     <!-- Неоновая рамка -->
     <div class="neon-border"></div>
 
+    <script>
+        // ============ INTERSECTION OBSERVER (для контента после авторизации) ============
+        document.addEventListener('DOMContentLoaded', function () {
+            const hiddenElements = document.querySelectorAll('.hidden');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.remove('hidden');
+                        entry.target.classList.add('show');
+                    }
+                });
+            }, { threshold: 0.1 });
+            hiddenElements.forEach(el => observer.observe(el));
+        });
+    </script>
     <script>
         // ============ CUSTOM CURSOR ============
         (function() {

@@ -273,6 +273,10 @@ h1, h2, h3 {
     color:var(--accent-color);
     text-shadow:var(--accent-glow);
     margin-bottom:0.4rem;
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+    background-clip: unset;
 }
 h1 {
     font-size:2.8rem;
@@ -396,11 +400,8 @@ a:hover {
 .job h3, .edu h3 {
     display:inline-block;
     margin-right:0.5rem;
-    background: linear-gradient(90deg, var(--accent-color), var(--accent-purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: none;
+    color: var(--accent-color);
+    text-shadow: var(--accent-glow);
 }
 .company, .instruction {font-weight:bold; color:#ffb3b3;}
 .period {font-size:0.9rem; color:#aaa; margin:0.3rem 0;}
