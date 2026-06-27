@@ -17,9 +17,20 @@
         <div class="splash-loader"></div>
     </div>
 
-    <!-- CUSTOM CURSOR -->
+    <!-- КНОПКА ПЕРЕКЛЮЧЕНИЯ ТЕМЫ -->
+    <button id="themeToggle" class="theme-toggle" title="Переключить тему">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+    </button>
+
+    <!-- CUSTOM CURSOR (кастомная стрелка) -->
     <div class="custom-cursor" id="cursor">
-        <div class="cursor-dot"></div>
+        <svg viewBox="0 0 22 28" xmlns="http://www.w3.org/2000/svg">
+            <path class="cursor-fill" d="M2 2 L2 22 L7 16 L11 26 L13.5 24.5 L9.5 14.5 L16 14.5 Z" fill="#ff073a"/>
+            <path class="cursor-stroke" d="M2 2 L2 22 L7 16 L11 26 L13.5 24.5 L9.5 14.5 L16 14.5 Z" fill="none"/>
+        </svg>
     </div>
 
     <!-- Фон -->
@@ -103,6 +114,30 @@
         });
     </script>
     <script>
+        // ============ THEME TOGGLE ============
+        (function() {
+            const toggleBtn = document.getElementById('themeToggle');
+            if (!toggleBtn) return;
+            const saved = localStorage.getItem('site-theme');
+            if (saved === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                toggleBtn.classList.add('light');
+            }
+            toggleBtn.addEventListener('click', function() {
+                const html = document.documentElement;
+                const isLight = html.getAttribute('data-theme') === 'light';
+                if (isLight) {
+                    html.removeAttribute('data-theme');
+                    localStorage.setItem('site-theme', 'dark');
+                    toggleBtn.classList.remove('light');
+                } else {
+                    html.setAttribute('data-theme', 'light');
+                    localStorage.setItem('site-theme', 'light');
+                    toggleBtn.classList.add('light');
+                }
+            });
+        })();
+
         // ============ CUSTOM CURSOR ============
         (function() {
             const cursor = document.getElementById('cursor');
