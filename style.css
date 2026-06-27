@@ -16,6 +16,12 @@
     --card-bg: rgba(10, 10, 10, 0.4);
     --card-border: rgba(255, 7, 58, 0.12);
     --muted-text: #888;
+    --block-text: #e0e0e0;
+    --block-bg: rgba(10, 10, 10, 0.4);
+    --auth-card-bg: rgba(10, 10, 10, 0.6);
+    --pin-bg: rgba(10, 10, 10, 0.4);
+    --pin-border: rgba(255, 7, 58, 0.25);
+    --pin-color: #e0e0e0;
 }
 
 /* ===== LIGHT THEME ===== */
@@ -35,6 +41,12 @@
     --card-bg: rgba(255,255,255,0.5);
     --card-border: rgba(0,0,0,0.08);
     --muted-text: #555;
+    --block-text: #1a1a2e;
+    --block-bg: rgba(255,255,255,0.5);
+    --auth-card-bg: rgba(255,255,255,0.85);
+    --pin-bg: rgba(255,255,255,0.7);
+    --pin-border: rgba(0,0,0,0.15);
+    --pin-color: #1a1a2e;
 }
 
 /* Light theme overrides for specific elements */
@@ -117,6 +129,27 @@
     border-color: #c0392b;
     box-shadow: 0 0 10px rgba(192,57,43,0.3);
 }
+[data-theme="light"] .auth-card {
+    background: rgba(255,255,255,0.85);
+    border-color: rgba(192,57,43,0.2);
+}
+[data-theme="light"] .auth-card h1 {
+    color: #1a1a2e;
+}
+[data-theme="light"] .block {
+    background: rgba(255,255,255,0.5);
+    border-color: rgba(0,0,0,0.08);
+}
+[data-theme="light"] .block h2 {
+    color: #c0392b !important;
+}
+[data-theme="light"] .hw-list {
+    color: #1a1a2e;
+}
+[data-theme="light"] .neon-wrap {
+    background: rgba(255,255,255,0.5);
+    border-color: rgba(192,57,43,0.2);
+}
 [data-theme="light"] .modal-content {
     background: #fff;
     border-color: #c0392b;
@@ -151,51 +184,35 @@ body {
     overflow-x:hidden;
 }
 
-/* ============ CUSTOM CURSOR — круг + точка ============ */
+/* ============ CUSTOM CURSOR — скошенная стрелка (нестандартная, но привычная) ============ */
 .custom-cursor {
     position: fixed;
     pointer-events: none;
     z-index: 99999;
-    transform: translate(-50%, -50%);
+    transform: translate(-2px, -2px);
     transition: opacity 0.2s;
+    width: 20px;
+    height: 26px;
 }
 .cursor-dot {
-    width: 8px;
-    height: 8px;
+    width: 100%;
+    height: 100%;
     background: var(--cursor-color);
-    border-radius: 50%;
+    clip-path: polygon(0% 0%, 90% 0%, 100% 30%, 65% 45%, 95% 65%, 85% 100%, 45% 75%, 0% 100%);
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition: background 0.3s, width 0.2s, height 0.2s;
-    box-shadow: 0 0 6px var(--cursor-color), 0 0 12px rgba(255,255,255,0.15);
+    top: 0;
+    left: 0;
+    transition: background 0.3s, filter 0.2s;
+    filter: drop-shadow(0 0 4px var(--cursor-color)) drop-shadow(0 0 8px rgba(255,255,255,0.1));
+    opacity: 0.9;
 }
 .cursor-ring {
-    width: 32px;
-    height: 32px;
-    border: 1.5px solid var(--cursor-color);
-    border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s, border-width 0.3s;
-    opacity: 0.5;
-    mix-blend-mode: difference;
+    display: none;
 }
 .custom-cursor.hover .cursor-dot {
-    width: 12px;
-    height: 12px;
+    filter: drop-shadow(0 0 8px var(--accent-color)) drop-shadow(0 0 14px rgba(255,255,255,0.2));
     background: var(--accent-color);
-}
-.custom-cursor.hover .cursor-ring {
-    width: 48px;
-    height: 48px;
-    border-color: var(--accent-color);
-    border-width: 2px;
-    opacity: 0.7;
-    background: rgba(255,255,255,0.05);
+    opacity: 1;
 }
 
 /* ============ THEME TOGGLE BUTTON ============ */
@@ -687,8 +704,8 @@ footer {
     padding: 0.6rem;
     margin-bottom: 1rem;
     border: 1px solid var(--glass-border);
-    background: rgba(0,0,0,0.5);
-    color: var(--text-color);
+    background: var(--pin-bg);
+    color: var(--pin-color);
     border-radius: 6px;
     font-size: 1.2rem;
     font-family: var(--font-main);
@@ -873,4 +890,48 @@ footer {
 ::selection {
     background: var(--accent-color);
     color: var(--bg-color);
+}
+
+/* ============ AUTH CARD (protected.html) ============ */
+.auth-card {
+    background: var(--auth-card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 0 30px rgba(255,7,58,0.15);
+    max-width: 360px;
+    width: 90%;
+    transition: background 0.3s, border-color 0.3s;
+}
+
+/* ============ HARDWARE BLOCKS (protected.html) ============ */
+.block {
+    background: var(--block-bg);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    transition: background 0.3s, border-color 0.3s;
+}
+.block:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 16px rgba(255,7,58,0.1);
+}
+.hw-list {
+    text-align: left;
+    color: var(--block-text);
+    line-height: 1.8;
+    transition: color 0.3s;
+}
+
+/* Стиль для ссылки входа в protected.html */
+.auth-card h1 {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+    transition: color 0.3s;
 }
