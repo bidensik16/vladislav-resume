@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
 
@@ -23,11 +23,7 @@
         <span class="toggle-icon-moon">🌙</span>
     </button>
 
-    <!-- CUSTOM CURSOR — плавный полупрозрачный круг с точкой -->
-    <div class="custom-cursor" id="cursor">
-        <div class="cursor-dot"></div>
-        <div class="cursor-ring"></div>
-    </div>
+    <!-- CURSOR — стандартный, инвертируется от темы -->
 
     <!-- Фон + анимированная сетка -->
     <div class="bg-layer">
@@ -186,44 +182,7 @@
             });
         })();
 
-        // ============ CUSTOM CURSOR ============
-        (function() {
-            const cursor = document.getElementById('cursor');
-            if (!cursor) return;
-            let mouseX = 0, mouseY = 0;
-            let curX = 0, curY = 0;
-            document.addEventListener('mousemove', e => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-            });
-            // Hover effect on interactive elements
-            const hoverTargets = 'a, button, input, .header-btn, .glitch, h1, h2, h3, li, select, .custom-cursor';
-            document.addEventListener('mouseover', e => {
-                if (e.target.closest(hoverTargets) || e.target === cursor) {
-                    cursor.classList.add('hover');
-                }
-            });
-            document.addEventListener('mouseout', e => {
-                if (e.target.closest(hoverTargets) || e.target === cursor) {
-                    cursor.classList.remove('hover');
-                }
-            });
-            function moveCursor() {
-                curX += (mouseX - curX) * 0.12;
-                curY += (mouseY - curY) * 0.12;
-                cursor.style.left = curX + 'px';
-                cursor.style.top = curY + 'px';
-                requestAnimationFrame(moveCursor);
-            }
-            moveCursor();
-            // Hide cursor when leaving window
-            document.addEventListener('mouseleave', () => {
-                cursor.style.opacity = '0';
-            });
-            document.addEventListener('mouseenter', () => {
-                cursor.style.opacity = '1';
-            });
-        })();
+        // (кастомный курсор удалён — используется стандартный)
 
         // ============ MATRIX RAIN ============
         (function() {
